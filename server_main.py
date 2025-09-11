@@ -25,9 +25,9 @@ def main():
     parser.add_argument("--overwrite", default=False, type=bool)
     args = parser.parse_args()
 
-    host = "analytics-and-library.cxqeuoaemxbe.ca-central-1.rds.amazonaws.com"
-    user = "admin"
-    password = "qsCLwrB742VRjyN58ubpKU"
+    host = "sample.rds.com"
+    user = "_"
+    password = "____"
     database = "analytics_and_library"
 
     print(" I am here")
