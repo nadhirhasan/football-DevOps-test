@@ -33,13 +33,13 @@ def main():
     print(" I am here")
     db_conn = DBConnector(host, user, password, database)
 
-    access_key = os.environ["AWS_ACCESS_KEY"]
-    secret_key = os.environ["AWS_SECRET_KEY"]
-    boto3_session = boto3.session.Session(
-        aws_access_key_id=access_key,
-        aws_secret_access_key=secret_key,
-    )
-    s3 = boto3_session.client("s3")
+    # access_key = os.environ["AWS_ACCESS_KEY"]
+    # secret_key = os.environ["AWS_SECRET_KEY"]
+    # boto3_session = boto3.session.Session(
+    #     aws_access_key_id=access_key,
+    #     aws_secret_access_key=secret_key,
+    # )
+    # s3 = boto3_session.client("s3")
 
     #################   Arguments   #################
     device = args.device
