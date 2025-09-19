@@ -6,10 +6,12 @@ import time
 import os
 from base_models.server_conn.DBConnector import DBConnector
 import boto3
+import logging
 
-
+logging.basicConfig(level=logging.INFO,filename='app.log', filemode='a')
 
 def run_script(cmd):
+    logging.info(f"Running script: {cmd}")
     subprocess.run(cmd, shell=True)
 
 def update_match_status(db_conn, match_id, status):
@@ -30,7 +32,7 @@ def main():
     password = "qsCLwrB742VRjyN58ubpKU"
     database = "analytics_and_library"
 
-    print(" I am here")
+    logging.info("starting db connection")
     db_conn = DBConnector(host, user, password, database)
 
     # access_key = os.environ["AWS_ACCESS_KEY"]
@@ -49,7 +51,7 @@ def main():
     m3u8_link = args.s3_link  
     start_time = time.time()
 
-    print(" I am here2")
+    logging.INFO("Arguments parsed")
 
     while True:        
         match_folder_name = f"match_{match_id}"
@@ -58,7 +60,7 @@ def main():
         # download_cmd = f"ffmpeg -i {m3u8_link} -ss 00:15:00  -t 00:10:00 -c copy {source_video_path}"
 
         ################# Download Video #################
-        print("Match Downloading...")
+        logging.info("Match Downloading...")
         print(m3u8_link)
         time.sleep(5)
         # download_cmd = f"ffmpeg -i {m3u8_link} -vf scale=1280:720,fps=30 -c:v libx264 -crf 23 -preset veryfast -c:a copy {source_video_path}"
@@ -72,7 +74,7 @@ def main():
         
         source_video_path_ = Path(source_video_path)
         game_name = source_video_path_.parent.name  # 'game_shot'
-        print(f"Overwrite: {overwrite}")
+        logging.info(f"Overwrite: {overwrite}")
         # Commands
         ball_cmd = ball_cmd = f"python base_models/ball_detection.py --source_video_path {source_video_path} --device {device} --ball_model_path objectDetection_Weights/first_ckpt/best.pt {'--overwrite' if overwrite else ''} --ball_detection_mode yolo"
         pitch_cmd = f"python base_models/pitch_detection_v2.py --source_video_path {source_video_path} --pitch_model_kp_path keypointDetection_Weights/custom_keypoint --pitch_model_line_path keypointDetection_Weights/custom_line {'--overwrite' if overwrite else ''} --display true"
@@ -90,7 +92,7 @@ def main():
 
 
         ########################   Video Processing ########################################
-        print("Video Processing....")
+        logging.info("Video Processing....")
         time.sleep(5)
 
         # # Step 1: Run ball, pitch, player, ball_action in parallel
@@ -126,23 +128,21 @@ def main():
 
         
         update_match_status(db_conn,match_id,"cv_processed")
-        print("Match Status Updated...")
+        logging.info("Match Status Updated...")
 
 
 
         #####################   Json Output Upload to s3 ########################################
-        print("Json File Uploading to s3....")
+        logging.info("Json File Uploading to s3....")
         time.sleep(5)
         # s3.upload_file(f"{output_folder}/player_detections_yolo.json", "man-match-recordings", f"{match_id}_player_detections.json")
         # s3.upload_file(f"{output_folder}/event_detections_pad.json", "man-match-recordings", f"{match_id}_event_detections.json")
 
-        print(f"Time to process match {match_id} is {time.time() - start_time}!")
-        print()
+        logging.info(f"Time to process match {match_id} is {time.time() - start_time}!")
+        
         break
     end_time = time.time()
-    print()
-    print(f"Time Taken to process match {match_id}: {end_time - start_time} Seconds.")
-    print()
+    logging.info(f"Time Taken to process match {match_id}: {end_time - start_time} Seconds.")
 
 if __name__ == '__main__':
     main()
