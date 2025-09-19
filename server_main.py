@@ -51,7 +51,7 @@ def main():
     m3u8_link = args.s3_link  
     start_time = time.time()
 
-    logging.INFO("Arguments parsed")
+    logging.info("Arguments parsed")
 
     while True:        
         match_folder_name = f"match_{match_id}"
