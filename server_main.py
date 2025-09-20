@@ -93,7 +93,8 @@ def main():
 
         ########################   Video Processing ########################################
         logging.info("Video Processing....")
-        time.sleep(5)
+        time.sleep(1200)
+        logging.info("Video Processing Completed.")
 
         # # Step 1: Run ball, pitch, player, ball_action in parallel
         # p1 = Process(target=run_script, args=(ball_cmd,))
